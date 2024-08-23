@@ -1,28 +1,39 @@
 import socket
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+import threading
 
-host = '127.0.0.1'
-port = 12345
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((host, port))
-server.listen()
+server.bind(('127.0.0.1', 12345))
+server.listen(5)
 
-def lidar_com_cliente():
-    conn, addr = server.accept()
+clients = {}
+enderecos = {}
+
+def lidar_cliente(client):
+    username = client.recv(1024).decode()
+    client.send(bytes(f"Você está logado como {username}!", "utf8"))
+    msg = f"{username} entrou no chat!"
+    enviar_msg(bytes(msg, "utf8"))
+    clients[client] = username
     while True:
-        data = conn.recv(1024)
-        if not data:
+        msg = client.recv(1024)
+        print(msg.decode().split(":"))
+        if msg != bytes("{quit}", "utf8"):
+            decoded_msg = msg.decode().split(":")
+            sender, message = decoded_msg
+            enviar_msg(bytes(f"{sender}: {message}", "utf8"))
+
+        else:
+            client.send(bytes("{quit}", "utf8"))
+            client.close()
+            del clients[client]
+            enviar_msg(bytes(f"{username} saiu do chat.", "utf8"))
             break
-        conn.sendall(data)
-    conn.close()
 
-def iniciar_servidor():
-    lidar_com_cliente()
+def enviar_msg(msg, prefix=""):
+    for client in clients:
+        client.send(bytes(prefix, "utf8") + msg)
 
-win = Gtk.Window(title="Servidor")
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-
-Gtk.main()
+while True:
+    client, client_address = server.accept()
+    enderecos[client] = client_address
+    threading.Thread(target=lidar_cliente, args=(client,)).start()
