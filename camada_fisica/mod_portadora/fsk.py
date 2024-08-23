@@ -9,6 +9,7 @@ def fsk(entrada):
     entrada: Sequência de bits representada como uma string de '0's e '1's.
     """
     # Definição dos parâmetros
+    freq_portadora=1
     amostras_por_bit=100
     num_bits = len(entrada)
     V = 1  # Amplitude máxima do sinal
@@ -22,10 +23,10 @@ def fsk(entrada):
     for i, bit in enumerate(entrada):
         if bit == '1':
             # Calcula a senoide para o bit '1' com frequência freq_1
-            y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * 2 * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
+            y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * 2*freq_portadora * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
         else:
             # Calcula a senoide para o bit '0' com frequência freq_0
-            y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * 1 * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
+            y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * freq_portadora * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
     
     return t, y
 
