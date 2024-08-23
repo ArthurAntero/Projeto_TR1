@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def nrz_polar(entrada):
+def Transmissor_nrz_polar(entrada):
     """
     Função para gerar o sinal NRZ Polar a partir de uma sequência de bits.
     
@@ -19,11 +19,41 @@ def nrz_polar(entrada):
     # Criação do eixo X
     x = np.linspace(0, num_bits, num_bits * amostras_por_bit)
 
-    return x, y    
+    return x, y   
+
+def Receptor_nrz_polar(sinal_recebido):
+    """
+    Função para demodular um sinal NRZ-Polar em uma sequência de bits.
+    
+    Parâmetros:
+    sinal_recebido: O sinal NRZ-Polar recebido como um array NumPy.
+    """
+    amostras_por_bit=100
+    num_amostras = len(sinal_recebido)
+    num_bits = num_amostras // amostras_por_bit
+    bits_demodulados = []
+
+    for i in range(num_bits):
+        # Obter o sinal correspondente a um bit
+        segmento = sinal_recebido[i * amostras_por_bit : (i + 1) * amostras_por_bit]
+        
+        # Calcular o nível médio do sinal no segmento
+        nivel_medio = np.mean(segmento)
+        
+        # Decisão do bit baseado no nível médio
+        if nivel_medio > 0:
+            bits_demodulados.append('1')
+        else:
+            bits_demodulados.append('0')
+
+    # Converter a lista de bits em uma string de bits
+    return ''.join(bits_demodulados)
 
 # Exemplo de uso
-entrada = "1011001111111111111111111"
-x, y = nrz_polar(entrada)
+entrada = "000011010101"
+x, y = Transmissor_nrz_polar(entrada)
+bits_demodulados = Receptor_nrz_polar(y)
+print("Bits demodulados:", bits_demodulados)
 
 # Plot do sinal NRZ Polar
 plt.figure(figsize=(10, 4))
