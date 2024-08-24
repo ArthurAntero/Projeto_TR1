@@ -1,65 +1,43 @@
-def Transmissor_contagem_caractere(entrada):
+def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
     """
-    Função para realizar o enquadramento de uma string de entrada utilizando contagem de caracteres.
+    Função para realizar o enquadramento de um array de bytes utilizando contagem de bytes.
     
     Parâmetros:
-    - entrada: String de entrada que será enquadrada.
+    - entrada: String de bytes.
     """
     tamanho_quadro=6
-    
-    # Converter a string de entrada em uma lista de caracteres
-    lista = list(entrada)
-    comprimento_total = len(lista)
+    lista_bytes = [format(ord(char), '08b') for char in entrada]
+    comprimento_total = len(lista_bytes)
 
-    # Se o comprimento total for menor ou igual ao tamanho do quadro, apenas adicionar o comprimento no início
+    lista_enquadrada = []
+
     if comprimento_total <= tamanho_quadro:
-        lista.insert(0, str(comprimento_total))
+        # Se o comprimento total for menor ou igual ao tamanho do quadro, adicionar o comprimento no início
+        quadro = format(comprimento_total, '08b')  # Formatar o comprimento como 8 bits
+        quadro += ''.join(lista_bytes)
+        lista_enquadrada.append(quadro)
     else:
         # Quebra a entrada em múltiplos quadros
-        aux1 = comprimento_total % tamanho_quadro  # Caracteres restantes após os quadros completos
+        aux1 = comprimento_total % tamanho_quadro  # Bytes restantes após os quadros completos
         num_quadros_completos = comprimento_total // tamanho_quadro  # Número de quadros completos
-        
-        # Inserir o comprimento do primeiro quadro completo
-        lista.insert(0, str(tamanho_quadro))
-        
-        # Inserir comprimento dos quadros intermediários (todos são completos com o tamanho máximo)
-        for i in range(1, num_quadros_completos):
-            lista.insert(i * (tamanho_quadro + 1), str(tamanho_quadro))
+
+        # Inserir comprimento dos quadros completos
+        for i in range(num_quadros_completos):
+            quadro = format(tamanho_quadro, '08b')  # Formatar o comprimento como 8 bits
+            quadro += ''.join(lista_bytes[i * tamanho_quadro:(i + 1) * tamanho_quadro])
+            lista_enquadrada.append(quadro)
         
         # Inserir comprimento do último quadro (caso haja um quadro incompleto)
         if aux1 != 0:
-            lista.insert(num_quadros_completos * (tamanho_quadro + 1), str(aux1))
+            quadro = format(aux1, '08b')  # Formatar o comprimento como 8 bits
+            quadro += ''.join(lista_bytes[num_quadros_completos * tamanho_quadro:])
+            lista_enquadrada.append(quadro)
 
-    return lista
-
-def Receptor_contagem_caractere(entrada):
-    """
-    Função para decodificar uma string de entrada usando o método de enquadramento por contagem de caracteres.
-    
-    Parâmetros:
-    - entrada: Lista de caracteres recebida do transmissor, que inclui a contagem de caracteres no início de cada quadro.
-    """
-    
-    resultado = []  # Lista para armazenar os caracteres decodificados
-    i = 0  # Índice para percorrer a lista de entrada
-
-    while i < len(entrada):
-        # O primeiro caractere de cada quadro é o número de caracteres desse quadro
-        num_caracteres = int(entrada[i])  # Converte a contagem de caracteres para um número inteiro
-        i += 1  # Move para o primeiro caractere real do quadro
-
-        # Extrai os caracteres do quadro atual baseado na contagem
-        quadro = entrada[i:i + num_caracteres]
-        resultado.extend(quadro)  # Adiciona os caracteres decodificados ao resultado final
-
-        # Move o índice para o próximo quadro
-        i += num_caracteres
-
-    return ''.join(resultado)  # Converte a lista de caracteres de volta para uma string
+    string_enquadrada = ''.join(lista_enquadrada)
+    return lista_enquadrada, string_enquadrada
 
 # Exemplo de uso
-entrada = "ABcd46111111"
-resultado_transmissor = Transmissor_contagem_caractere(entrada)
-print(resultado_transmissor) 
-resultado_receptor = Receptor_contagem_caractere(resultado_transmissor)
-print(resultado_receptor) 
+entrada = "Aaaaaaa"  # Cada caractere é convertido em um byte
+resultado = Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6)  # Define o tamanho do quadro em bytes
+print(resultado)  # Exemplo de saída: ['00000010', '0100000101000010', '01000011']
+
