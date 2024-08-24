@@ -10,7 +10,7 @@ clients = {}  # Armazena os clientes e seus nomes de usuário
 def lidar_cliente(client):
     username = client.recv(1024).decode()  # Recebe o nome de usuário
     clients[client] = username  # Adiciona o cliente à lista de clientes conectados
-    client.send(bytes(f"Você está logado como {username}!", "utf8"))
+    client.send(bytes(f"Você está logado como {username}! \n", "utf8"))
     msg = f"{username} entrou no chat!"
     enviar_msg(bytes(msg, "utf8"))  # Notifica todos os clientes que um novo usuário entrou no chat
 
