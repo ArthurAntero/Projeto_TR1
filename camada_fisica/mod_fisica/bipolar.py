@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def bipolar(entrada):
+def Transmissor_bipolar(entrada):
     """
     Função para gerar o sinal Bipolar a partir de uma sequência de bits.
     
@@ -36,9 +36,39 @@ def bipolar(entrada):
     
     return x, y
 
+def Receptor_bipolar(sinal_recebido):
+    """
+    Função para demodular um sinal Bipolar em uma sequência de bits.
+    
+    Parâmetros:
+    sinal_recebido: O sinal Bipolar recebido como um array NumPy.
+    """
+    amostras_por_bit=100
+    num_amostras = len(sinal_recebido)
+    num_bits = num_amostras // amostras_por_bit
+    bits_demodulados = []
+
+    for i in range(num_bits):
+        # Obter o sinal correspondente a um bit
+        segmento = sinal_recebido[i * amostras_por_bit : (i + 1) * amostras_por_bit]
+
+        # Calcular o nível médio do sinal no segmento
+        nivel_medio = np.mean(segmento)
+
+        # Decisão do bit baseado no nível médio
+        if nivel_medio == 0:
+            bits_demodulados.append('0')
+        else:
+            bits_demodulados.append('1')
+
+    # Converter a lista de bits em uma string de bits
+    return ''.join(bits_demodulados)
+
 # Exemplo de uso
-entrada = "10110011"
-x, y = bipolar(entrada)
+entrada = "10110011111111110000001010100"
+x, y = Transmissor_bipolar(entrada)
+bits_demodulados = Receptor_bipolar(y)
+print("Bits demodulados:", bits_demodulados)
 
 # Plot do sinal Bipolar
 plt.figure(figsize=(10, 4))
