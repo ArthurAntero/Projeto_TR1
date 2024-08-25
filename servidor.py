@@ -28,7 +28,6 @@ def lidar_cliente(client):
                     enviar_msg(bytes(send_message, "utf8"))
 
                     if commands != "":
-                        print(commands.split(" "))
                         if commands.split(" ")[3][-1] == "1":
                             #bit_de_paridade_par()
                             print("Bit de paridade par")
