@@ -11,8 +11,7 @@ def lidar_cliente(client):
     username = client.recv(1024).decode()  # Recebe o nome de usuário
     clients[client] = username  # Adiciona o cliente à lista de clientes conectados
     client.send(bytes(f"Você está logado como {username}! \n", "utf8"))
-    msg = f"{username} entrou no chat!"
-    enviar_msg(bytes(msg, "utf8"))  # Notifica todos os clientes que um novo usuário entrou no chat
+    
 
     while True:
         try:
@@ -45,8 +44,12 @@ def lidar_cliente(client):
             break
 
 def enviar_msg(msg):
-    """Envia uma mensagem para todos os clientes conectados."""
     for client in clients:
+        byte_msg = ""
+        for i in list(msg):
+            byte_msg = f'{byte_msg} {bin(i).split("b")[1]}'
+        if "111010 100000" in byte_msg:
+            byte_msg = byte_msg.split("111010 100000")[1]
         client.send(msg)
 
 while True:
