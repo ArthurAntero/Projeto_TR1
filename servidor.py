@@ -23,12 +23,49 @@ def lidar_cliente(client):
                     sender = decoded_msg[0]  # Nome de usuário
                     message = decoded_msg[1]  # Mensagem
                     commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos
-                    print(commands)
                     
                     send_message = f"{sender}: {message}"
-
                     enviar_msg(bytes(send_message, "utf8"))
-                
+
+                    if commands != "":
+                        print(commands.split(" "))
+                        if commands.split(" ")[3][-1] == "1":
+                            #bit_de_paridade_par()
+                            print("Bit de paridade par")
+                        elif commands.split(" ")[3][-1] == "2":
+                            #crc()
+                            print("CRC")
+
+                        # Hamming
+                        print("Hamming")
+
+                        if commands.split(" ")[2][-1] == "1":
+                            #Contagem de caracteres
+                            print("Contagem de caracteres")
+                        elif commands.split(" ")[2][-1] == "2":
+                            #Insercao de bytes ou caracteres
+                            print("Insercao de bytes ou caracteres")
+
+                        if commands.split(" ")[0][-1] == "1":
+                            #NRZ Polar
+                            print("NRZ Polar")
+                        elif commands.split(" ")[0] == "2":
+                            #Manchester
+                            print("Manchester")
+                        elif commands.split(" ")[0][-1] == "3":
+                            #Bipolar
+                            print("Bipolar")
+
+                        if commands.split(" ")[1][-1] == "1":
+                            #ASK
+                            print("ASK")
+                        elif commands.split(" ")[1][-1] == "2":
+                            #FSK
+                            print("FSK")
+                        elif commands.split(" ")[1][-1] == "3":
+                            #8-QAM
+                            print("8-QAM")
+
             else:
                 # Conexão fechada abruptamente
                 client.close()
