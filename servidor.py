@@ -22,7 +22,8 @@ def lidar_cliente(client):
                 if len(decoded_msg) >= 2:
                     sender = decoded_msg[0]  # Nome de usuário
                     message = decoded_msg[1]  # Mensagem
-                    commands = decoded_msg[2] # Comandos
+                    commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos
+                    print(commands)
                     
                     send_message = f"{sender}: {message}"
 
