@@ -46,13 +46,16 @@ def lidar_cliente(client):
 def trasnsformar_para_bit(msg):
     byte_msg = ""
     for i in list(msg):
-        byte_msg = f'{byte_msg} {bin(i).split("b")[1]}'
-    if "111010 100000" in byte_msg:
-        byte_msg = byte_msg.split("111010 100000")[1]
+        if len(bin(i).split("b")[1]) != 8:
+            byte_msg = f'{byte_msg}0{bin(i).split("b")[1]}'
+        else:
+            byte_msg = f'{byte_msg}{bin(i).split("b")[1]}'
+    if "01110100100000" in byte_msg:
+        byte_msg = byte_msg.split("01110100100000")[1]
+    return byte_msg
 
 def enviar_msg(msg):
     for client in clients:
-        trasnsformar_para_bit(msg)
         client.send(msg)
 
 while True:
