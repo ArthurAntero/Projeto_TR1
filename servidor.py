@@ -43,13 +43,16 @@ def lidar_cliente(client):
             enviar_msg(bytes(f"{username} saiu do chat.", "utf8"))
             break
 
+def trasnsformar_para_bit(msg):
+    byte_msg = ""
+    for i in list(msg):
+        byte_msg = f'{byte_msg} {bin(i).split("b")[1]}'
+    if "111010 100000" in byte_msg:
+        byte_msg = byte_msg.split("111010 100000")[1]
+
 def enviar_msg(msg):
     for client in clients:
-        byte_msg = ""
-        for i in list(msg):
-            byte_msg = f'{byte_msg} {bin(i).split("b")[1]}'
-        if "111010 100000" in byte_msg:
-            byte_msg = byte_msg.split("111010 100000")[1]
+        trasnsformar_para_bit(msg)
         client.send(msg)
 
 while True:
