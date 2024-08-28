@@ -11,6 +11,7 @@ def lidar_cliente(client):
     username = client.recv(1024).decode()  # Recebe o nome de usuário
     clients[client] = username  # Adiciona o cliente à lista de clientes conectados
     client.send(bytes(f"Você está logado como {username}!\nDigite /help no primeiro terminal com o segundo vazio para ajuda com comandos.\n", "utf8"))
+    commands_help(client)
 
     while True:
         try:
@@ -89,7 +90,7 @@ def trasnsformar_para_bit(msg):
         byte_msg = byte_msg.split("01110100100000")[1]
     return byte_msg
 
-def commands_help():
+def commands_help(client):
     client.send(bytes("\nAjuda com comandos:\n", "utf-8"))
     client.send(bytes("O segundo terminal é apenas para comandos!\n\n", "utf-8"))
     client.send(bytes("Para escolher modulação digital: md[1-3]\n1- NRZ-Polar\n2- Manchester\n3- Bipolar\n\n", "utf-8"))
@@ -102,10 +103,7 @@ def commands_help():
 
 def enviar_msg(msg):
     for client in clients:
-        if msg.decode().split(": ")[1] == "/help":
-            commands_help()
-        else:
-            client.send(msg)
+        client.send(msg)
 
 while True:
     client, client_address = server.accept()
