@@ -5,9 +5,11 @@ def Transmissor_crc(quadro, polinomio_gerador):
     Recebe um quadro e um polinomio gerador e aplica o calculo de CRC
     para o quadro a ser transmitido
 
-    Params:
-      quadro: string de bits sem o CRC
-      polinomia_gerador: string de bits representativos do polinomio gerador
+    Parametros:
+      - quadro: string de bits sem o CRC
+      - polinomia_gerador: string de bits representativos do polinomio gerador
+    Retorno:
+      - string de bits com o CRC
   """
   tamanho_gerador = len(polinomio_gerador)
   dividendo = quadro + "0" * tamanho_gerador
@@ -28,9 +30,11 @@ def Receptor_crc(quadro, polinomio_gerador):
     Recebe um quadro e um polinomio gerador e decodifica o calculo de CRC
     para o quadro recebido
 
-    Params:
-      quadro: string de bits com o CRC
-      polinomia_gerador: string de bits representativos do polinomio gerador
+    Parametros:
+      - quadro: string de bits com o CRC
+      - polinomia_gerador: string de bits representativos do polinomio gerador
+    Retorno:
+      - um booleano (True se teve erro e False se não teve erro)
   """
   tamanho_gerador = len(polinomio_gerador)
   dividendo = quadro + "0" * tamanho_gerador
@@ -42,7 +46,7 @@ def Receptor_crc(quadro, polinomio_gerador):
       resto = format(int(dividendo_temp, 2) ^ int("0"*tamanho_gerador, 2), f"0{tamanho_gerador - 1}b")
     dividendo_temp = resto + dividendo[i + tamanho_gerador]
 
-  return resto == "0" * (tamanho_gerador - 1)
+  return resto != "0" * (tamanho_gerador - 1)
 
 quadro_s_crc = "11111001100"
 polinomio_gerador = "100011001"
