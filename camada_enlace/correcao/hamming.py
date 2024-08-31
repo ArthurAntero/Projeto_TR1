@@ -1,5 +1,5 @@
 # Definição das posições dos bits de verificação
-check_bits_positions = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+bits_hamming_posicoes = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
 def Transmissor_hamming_par(msg):
   """
@@ -10,26 +10,26 @@ def Transmissor_hamming_par(msg):
   Retorno:
     - string de bits com o codigo de hamming incorporado
   """
-  result = []
-  i = 0 # index para iterar no result
+  resultado = []
+  i = 0 # index para iterar no resultado
   j = 0 # index para iterar no msg
   while j < len(msg):
-    if i + 1 in check_bits_positions:
-      result.append("0")
+    if i + 1 in bits_hamming_posicoes:
+      resultado.append("0")
       i += 1
     else:
-      result.append(msg[j])
-      bit_position_temp = i + 1
-      k = len(check_bits_positions) - 1 # index para iterar no check_bits_positions
-      while bit_position_temp > 0:
-        check_bit_position = check_bits_positions[k]
-        if bit_position_temp >= check_bit_position:
-          result[check_bit_position - 1] = str(int(result[check_bit_position - 1], 2) ^ int(result[i], 2))
-          bit_position_temp -= check_bit_position
+      resultado.append(msg[j])
+      bit_posicao_temp = i + 1
+      k = len(bits_hamming_posicoes) - 1 # index para iterar no bits_hamming_posicoes
+      while bit_posicao_temp > 0:
+        bit_hamming_posicao = bits_hamming_posicoes[k]
+        if bit_posicao_temp >= bit_hamming_posicao:
+          resultado[bit_hamming_posicao - 1] = str(int(resultado[bit_hamming_posicao - 1], 2) ^ int(resultado[i], 2))
+          bit_posicao_temp -= bit_hamming_posicao
         k -= 1
       i += 1
       j += 1
-  return "".join(result)
+  return "".join(resultado)
 
 def Receptor_hamming_par(msg):
   """
@@ -45,24 +45,24 @@ def Receptor_hamming_par(msg):
   msg_bits = list(msg)
   hamming_bits = ""
   for i in range(0, len(msg_bits)):
-    bit_position_temp = i + 1
-    k = len(check_bits_positions) - 1 # index para iterar no check_bits_positions
-    if bit_position_temp not in check_bits_positions:
-      while bit_position_temp > 0:
-        check_bit_position = check_bits_positions[k]
-        if bit_position_temp >= check_bit_position:
-          msg_bits[check_bit_position - 1] = str(int(msg_bits[check_bit_position - 1], 2) ^ int(msg_bits[i], 2))
-          bit_position_temp -= check_bit_position
+    bit_posicao_temp = i + 1
+    k = len(bits_hamming_posicoes) - 1 # index para iterar no bits_hamming_posicoes
+    if bit_posicao_temp not in bits_hamming_posicoes:
+      while bit_posicao_temp > 0:
+        bit_hamming_posicao = bits_hamming_posicoes[k]
+        if bit_posicao_temp >= bit_hamming_posicao:
+          msg_bits[bit_hamming_posicao - 1] = str(int(msg_bits[bit_hamming_posicao - 1], 2) ^ int(msg_bits[i], 2))
+          bit_posicao_temp -= bit_hamming_posicao
         k -= 1
   for i in range(len(msg_bits) - 1, -1, -1):
-    if i + 1 in check_bits_positions:
+    if i + 1 in bits_hamming_posicoes:
       hamming_bits += msg_bits[i]
   return ("1" in hamming_bits, int(hamming_bits, 2) - 1)
 
 # Exemplo de uso
 msg = "010111"
-msg_hamming_correct = "1000101011"
-msg_hamming_incorrect = "1000001011"  # erro no 5º bit (index 4)
+msg_hamming_correto = "1000101011"
+msg_hamming_incorreto = "1000001011"  # erro no 5º bit (index 4)
 print(Transmissor_hamming_par(msg))  # esperado: 1000101011
-print(Receptor_hamming_par(msg_hamming_correct))  # esperado: (False, -1)
-print(Receptor_hamming_par(msg_hamming_incorrect))  # esperado: (True, 4)
+print(Receptor_hamming_par(msg_hamming_correto))  # esperado: (False, -1)
+print(Receptor_hamming_par(msg_hamming_incorreto))  # esperado: (True, 4)
