@@ -1,6 +1,6 @@
 def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
     """
-    Função para realizar o enquadramento de um array de bytes utilizando contagem de bytes.
+    Função para realizar o enquadramento de uma string de bits utilizando contagem de bytes.
     
     Parâmetros:
     - entrada: String de bytes.
@@ -34,10 +34,38 @@ def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
             lista_enquadrada.append(quadro)
 
     string_enquadrada = ''.join(lista_enquadrada)
-    return lista_enquadrada, string_enquadrada
+    return string_enquadrada
+
+def Receptor_contagem_caractere_bytes(bits):
+    """
+    Função para realizar o desenquadramento de uma string de bits, utilizando contagem de bytes
+
+    Parametros:
+        - bits: string de bits com os cabecalhos de enquadramento
+    """
+    # se há uma contagem de bits que não cabem em bytes retorna -1
+    if (len(bits)) % 8 != 0:
+        return -1
+
+    conteudo = ""
+    num_bytes = len(bits) // 8
+    byte_index = 0
+    while byte_index < num_bytes:
+        byte = bits[byte_index*8:(byte_index + 1)*8]
+        num_bytes_quadro = int(byte, 2)
+        byte_index += 1
+        for i in range(num_bytes_quadro):
+            # se já passou do numero de bytes, ou seja, se o cabecalho tem mais bytes do que o esperado
+            if byte_index > num_bytes:
+                return -1
+            else:
+                conteudo += bits[byte_index*8:(byte_index + 1)*8]
+                byte_index += 1
+    return conteudo  
 
 # Exemplo de uso
 entrada = "Aaaaaaa"  # Cada caractere é convertido em um byte
 resultado = Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6)  # Define o tamanho do quadro em bytes
-print(resultado)  # Exemplo de saída: ['00000010', '0100000101000010', '01000011']
-
+print(resultado)
+# print(Receptor_contagem_caractere_bytes(resultado))  # Printa o conteudo de entrada sem os headers do enquadramento
+print(Receptor_contagem_caractere_bytes(resultado + "00100011"))  # Printa -1 (retorno de erro desenquadramento)
