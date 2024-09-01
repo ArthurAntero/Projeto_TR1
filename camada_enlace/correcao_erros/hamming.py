@@ -39,7 +39,7 @@ def Receptor_hamming_par(msg):
     - msg: string de bits com o codigo de hamming incorporado
   Retorno:
     - uma tupla no formato (booleano, int)
-      - o booleano é True caso tenha ocorrido erro e False caso não tenha ocorrido erro
+      - o booleano é True caso a msg seja valida e False caso a msg nao seja valida
       - o int é o index do bit errado
   """
   msg_bits = list(msg)
@@ -57,4 +57,4 @@ def Receptor_hamming_par(msg):
   for i in range(len(msg_bits) - 1, -1, -1):
     if i + 1 in bits_hamming_posicoes:
       hamming_bits += msg_bits[i]
-  return ("1" in hamming_bits, int(hamming_bits, 2) - 1)
+  return ("1" not in hamming_bits, int(hamming_bits, 2) - 1)
