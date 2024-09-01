@@ -58,11 +58,3 @@ def Receptor_hamming_par(msg):
     if i + 1 in bits_hamming_posicoes:
       hamming_bits += msg_bits[i]
   return ("1" in hamming_bits, int(hamming_bits, 2) - 1)
-
-# Exemplo de uso
-msg = "010111"
-msg_hamming_correto = "1000101011"
-msg_hamming_incorreto = "1000001011"  # erro no 5º bit (index 4)
-print(Transmissor_hamming_par(msg))  # esperado: 1000101011
-print(Receptor_hamming_par(msg_hamming_correto))  # esperado: (False, -1)
-print(Receptor_hamming_par(msg_hamming_incorreto))  # esperado: (True, 4)
