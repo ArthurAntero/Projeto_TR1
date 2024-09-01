@@ -3,10 +3,13 @@ def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
     Função para realizar o enquadramento de uma string de bits utilizando contagem de bytes.
     
     Parâmetros:
-    - entrada: String de bytes.
+    - entrada: string de bits.
     """
-    tamanho_quadro=6
-    lista_bytes = [format(ord(char), '08b') for char in entrada]
+    # se a entrada não couber em bytes, retorna -1
+    if len(entrada) % 8 != 0:
+        return -1
+
+    lista_bytes = [entrada[i:i+8] for i in range(0, len(entrada), 8)]
     comprimento_total = len(lista_bytes)
 
     lista_enquadrada = []
@@ -61,11 +64,11 @@ def Receptor_contagem_caractere_bytes(bits):
             else:
                 conteudo += bits[byte_index*8:(byte_index + 1)*8]
                 byte_index += 1
-    return conteudo  
+    return conteudo
 
 # Exemplo de uso
-entrada = "Aaaaaaa"  # Cada caractere é convertido em um byte
+entrada = "01000001011000010110000101100001011000010110000101100001"  # Bytes da string "Aaaaaaa"
 resultado = Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6)  # Define o tamanho do quadro em bytes
 print(resultado)
-# print(Receptor_contagem_caractere_bytes(resultado))  # Printa o conteudo de entrada sem os headers do enquadramento
+print(Receptor_contagem_caractere_bytes(resultado))  # Printa o conteudo de entrada sem os headers do enquadramento
 print(Receptor_contagem_caractere_bytes(resultado + "00100011"))  # Printa -1 (retorno de erro desenquadramento)
