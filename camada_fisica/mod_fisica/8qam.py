@@ -10,7 +10,7 @@ def Transmissor_8QAM(entrada):
     """
     simbolos = bits_to_qam8(entrada)
     x, y = gerar_sinal_8qam(simbolos)
-    plot_qam8_sinal(x, y)
+    plotar_sinal_8qam(x, y)
 
 def bits_to_qam8(bits):
     """Mapeia bits para símbolos da constelação 8-QAM."""
@@ -50,7 +50,7 @@ def gerar_sinal_8qam(simbolos, taxa_de_amostragem=100, freq_portadora=5):
     
     return x, y
 
-def plot_qam8_sinal(t, sinal):
+def plotar_sinal_8qam(t, sinal):
     """Plota o sinal 8-QAM gerado no tempo."""
     plt.figure(figsize=(10, 4))
     plt.plot(t, sinal, color='blue')
