@@ -26,9 +26,13 @@ def Transmissor_ask(entrada):
             y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * freq_portadora * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
         # Se for '0', a amplitude é zero, o que já é o padrão no vetor y
     
-    return t, y
-
-import numpy as np
+    plt.figure(figsize=(10, 4))
+    plt.plot(t, y, drawstyle='steps-pre')
+    plt.title('Modulação ASK (Amplitude Shift Keying)')
+    plt.xlabel('Tempo')
+    plt.ylabel('Amplitude')
+    plt.grid(True)
+    plt.show()
 
 def Receptor_ask(sinal_recebido):
     """
@@ -58,18 +62,3 @@ def Receptor_ask(sinal_recebido):
 
     # Converter a lista de bits em uma string de bits
     return ''.join(bits_demodulados)
-
-# Exemplo de uso
-entrada = "1011001100111110001111"
-t, y = Transmissor_ask(entrada)
-bits_demodulados = Receptor_ask(y)
-print("Bits demodulados:", bits_demodulados)
-
-# Plot do sinal ASK
-plt.figure(figsize=(10, 4))
-plt.plot(t, y, drawstyle='steps-pre')
-plt.title('Modulação ASK (Amplitude Shift Keying)')
-plt.xlabel('Tempo')
-plt.ylabel('Amplitude')
-plt.grid(True)
-plt.show()
