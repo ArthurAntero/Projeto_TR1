@@ -58,3 +58,9 @@ def Receptor_hamming_par(msg):
     if i + 1 in bits_hamming_posicoes:
       hamming_bits += msg_bits[i]
   return ("1" not in hamming_bits, int(hamming_bits, 2) - 1)
+
+def Receptor_correcao_hamming(msg, resultado_hamming):
+  eh_valido, bit_errado_index = resultado_hamming
+  if not eh_valido:
+    msg = msg[:bit_errado_index] + format(not int(msg[bit_errado_index], 2), "1b") + msg[bit_errado_index+1:]
+  return msg

@@ -1,1 +1,1 @@
-print(int("0101", 2))
+print(format(not int("0", 2), "1b"))
