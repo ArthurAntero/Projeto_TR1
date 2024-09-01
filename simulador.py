@@ -90,11 +90,11 @@ def lidar_cliente(client):
                         if cmd_det[-1] == "1": #Bit de paridade par
                             (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
                             if not eh_valido:
-                                print("Erro")
+                                break
                         elif cmd_det[-1] == "2": #CRC
                             (eh_valido, det_err_rec) = Receptor_crc(corr_err_rec)
                             if not eh_valido:
-                                print("Erro")  
+                                break 
 
                         # Enquadramento - Receptor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
