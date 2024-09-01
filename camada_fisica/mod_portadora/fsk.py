@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def fsk(entrada):
+def Transmissor_fsk(entrada):
     """
     Função para gerar o sinal FSK (Frequency Shift Keying) a partir de uma sequência de bits.
     
@@ -28,17 +28,13 @@ def fsk(entrada):
             # Calcula a senoide para o bit '0' com frequência freq_0
             y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * freq_portadora * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
     
-    return t, y
+    
+    plt.figure(figsize=(10, 4))
+    plt.plot(t, y)
+    plt.title('Modulação FSK (Frequency Shift Keying)')
+    plt.xlabel('Tempo')
+    plt.ylabel('Amplitude')
+    plt.grid(True)
+    plt.show()
 
-# Exemplo de uso
-entrada = "10110011111111111111"
-t, y = fsk(entrada)
 
-# Plot do sinal FSK
-plt.figure(figsize=(10, 4))
-plt.plot(t, y)
-plt.title('Modulação FSK (Frequency Shift Keying)')
-plt.xlabel('Tempo')
-plt.ylabel('Amplitude')
-plt.grid(True)
-plt.show()
