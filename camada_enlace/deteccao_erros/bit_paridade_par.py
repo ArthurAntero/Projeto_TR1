@@ -17,20 +17,20 @@ def Transmissor_bit_paridade_par(bits):
 
     return resultado
 
-def Receptor_bit_paridade_par(quadro):
+def Receptor_bit_paridade_par(bits):
     """
     Função do receptor para realizar a detecção de erros de um 
     array de bytes utilizando bit de paridade PAR
 
     Parâmetros:
-        - quadro: string de bits de dados e bit de paridade no final
+        - bits: string de bits de dados e bit de paridade no final
     Retorno:
-        - string com bits de dados
+        - booleano (True se os bits sao validos e False se os bits nao sao validos)
     """
     # Contando o número de bits '1' no byte original
-    num_bits_1 = quadro[:-1].count('1')
+    num_bits_1 = bits[:-1].count('1')
 
     # Se o número de bits '1' é par, o bit de paridade é '0', senão é '1'
     bit_paridade = '0' if num_bits_1 % 2 == 0 else '1'
 
-    return quadro[-1] == bit_paridade
+    return bits[-1] == bit_paridade

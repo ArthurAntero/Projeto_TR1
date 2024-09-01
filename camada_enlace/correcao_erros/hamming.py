@@ -31,7 +31,7 @@ def Transmissor_hamming_par(msg):
       j += 1
   return "".join(resultado)
 
-def Receptor_hamming_par(msg):
+def Receptor_deteccao_hamming_par(msg):
   """
   Função que implementa o código de Hamming para a recepção de uma mensagem.
 
@@ -59,8 +59,24 @@ def Receptor_hamming_par(msg):
       hamming_bits += msg_bits[i]
   return ("1" not in hamming_bits, int(hamming_bits, 2) - 1)
 
-def Receptor_correcao_hamming(msg, resultado_hamming):
-  eh_valido, bit_errado_index = resultado_hamming
+def Receptor_correcao_hamming(msg, result_deteccao_hamming):
+  """
+  Função que corrige uma string de bits a partir do resultado de deteccao de erros utilizando Hamming
+
+  Parametros:
+    - msg: string de bits
+    - result_deteccao_hamming: uma tupla no formato (booleano, int)
+      - o booleano é True caso a msg seja valida e False caso a msg nao seja valida
+      - o int é o index do bit errado
+  Retorno:
+    - a string de bits com o erro corrigido, utilizando hamming
+  """
+  eh_valido, bit_errado_index = result_deteccao_hamming
   if not eh_valido:
     msg = msg[:bit_errado_index] + format(not int(msg[bit_errado_index], 2), "1b") + msg[bit_errado_index+1:]
   return msg
+
+def Receptor_hamming_par(msg):
+  result_deteccao_hamming = Receptor_deteccao_hamming_par(msg)
+  msg_corrigida = Receptor_correcao_hamming(msg, result_deteccao_hamming)
+  return msg_corrigida

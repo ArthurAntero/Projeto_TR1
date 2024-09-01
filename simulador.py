@@ -46,8 +46,6 @@ def lidar_cliente(client):
                     message = decoded_msg[1]  # Mensagem
                     commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos
                     
-                    send_message = f"{sender}: {message}"
-                    enviar_msg(bytes(send_message, "utf8"))
 
                     if commands != "":
 
@@ -83,13 +81,18 @@ def lidar_cliente(client):
                             Transmissor_8QAM(corr_err_trans)
 
                         # Hamming - Receptor
-                        corr_err_rec = Receptor_correcao_hamming(corr_err_trans)
+                        corr_err_rec = Receptor_hamming_par(corr_err_trans)
 
                         # Detecção de erros - Receptor
                         if commands.split(" ")[3][-1] == "1": #Bit de paridade par
-                            det_err_rec = Receptor_bit_paridade_par(corr_err_rec)
+                            (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
+                            print(det_err_rec)
+                            if not eh_valido:
+                                print("Erro")
                         elif commands.split(" ")[3][-1] == "2": #CRC
-                            det_err_rec = Receptor_crc(corr_err_rec)
+                            (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
+                            if not eh_valido:
+                                print("Erro")  
 
                         # Enquadramento - Receptor
                         if commands.split(" ")[2][-1] == "1": #Contagem de caracteres
@@ -97,7 +100,11 @@ def lidar_cliente(client):
                         elif commands.split(" ")[2][-1] == "2": #Insercao de bytes ou caracteres
                             msg_desenquadrada = Receptor_insercao_bytes(transformar_para_bit(det_err_rec))
 
-
+                        send_message = f"{sender}: {msg_desenquadrada}"
+                        enviar_msg(bytes(send_message, "utf8"))
+                    else:
+                        send_message = f"{sender}: {message}"
+                        enviar_msg(bytes(send_message, "utf8"))
             else:
                 # Conexão fechada abruptamente
                 client.close()
