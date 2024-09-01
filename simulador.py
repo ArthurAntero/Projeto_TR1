@@ -126,6 +126,12 @@ def transformar_para_bit(msg):
     bits += format(ord(char), "08b")
   return bits
 
+def transformar_para_ascii(bits):
+    msg = ""
+    for byte_index in range(0, len(bits), 8):
+        msg += chr(int(bits[byte_index:byte_index + 8], 2))
+    return msg
+
 def commands_help(client):
     client.send(bytes("\nAjuda com comandos:\n", "utf-8"))
     client.send(bytes("O segundo terminal é apenas para comandos!\n\n", "utf-8"))
