@@ -80,9 +80,8 @@ def lidar_cliente(client):
             break
 
 def transformar_para_bit(msg):
-  _msg = msg.split(": ")[1]
   bits = ""
-  for char in _msg:
+  for char in msg:
     bits += format(ord(char), "08b")
   return bits
 
