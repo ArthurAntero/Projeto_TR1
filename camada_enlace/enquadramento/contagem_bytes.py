@@ -1,4 +1,4 @@
-def transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
+def transmissor_cb(entrada, tamanho_quadro=6):
     """
     Função para realizar o enquadramento de uma string de bits utilizando contagem de bytes.
     
@@ -41,7 +41,7 @@ def transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
     string_enquadrada = ''.join(lista_enquadrada)
     return string_enquadrada
 
-def receptor_contagem_caractere_bytes(bits):
+def receptor_cb(bits):
     """
     Função para realizar o desenquadramento de uma string de bits, utilizando contagem de bytes.
 

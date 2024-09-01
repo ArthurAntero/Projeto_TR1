@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def transmissor_bipolar(entrada):
+def transmissor_bi(entrada):
     """
     Função para gerar o sinal Bipolar a partir de uma sequência de bits.
     
@@ -42,7 +42,7 @@ def transmissor_bipolar(entrada):
     plt.grid(True)
     plt.show()
 
-def receptor_bipolar(sinal_recebido):
+def receptor_bi(sinal_recebido):
     """
     Função para demodular um sinal Bipolar em uma sequência de bits.
     

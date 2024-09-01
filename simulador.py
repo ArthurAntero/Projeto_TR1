@@ -1,29 +1,15 @@
 import socket
 import threading
 
-# Camada de Enlace - Detecção de erros
-from camada_enlace.deteccao_erros.bit_paridade_par import *
-from camada_enlace.deteccao_erros.crc import *
-
-# Camada de Enlace - Correção de erros
-from camada_enlace.correcao_erros.hamming import *
-
-# Camada de Enlace - Enquadramento
-from camada_enlace.enquadramento.contagem_caracteres import *
-from camada_enlace.enquadramento.insercao_bytes import *
-
-# Camada Física - Modulação Digital
-from camada_fisica.mod_digital.bipolar import *
-from camada_fisica.mod_digital.manchester import *
-from camada_fisica.mod_digital.nrz_polar import *
-
-# Camada Física - Modulação de Portadora
-from camada_fisica.mod_portadora.ask import *
-from camada_fisica.mod_portadora.fsk import *
-from camada_fisica.mod_portadora.qam import *
-
 # Funções auxiliares
 from aux import *
+
+# Rotinas da Camada de Enlace
+from camada_enlace.rotines import *
+
+# Rotinas da Camada Física
+from camada_fisica.rotines import *
+
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 12345))
@@ -34,7 +20,7 @@ clients = {}  # Armazena os clientes e seus nomes de usuário
 def lidar_cliente(client):
     username = client.recv(1024).decode()  # Recebe o nome de usuário
     clients[client] = username  # Adiciona o cliente à lista de clientes conectados
-    client.send(bytes(f"Você está logado como {username}!\n", "utf8"))
+    client.send(bytes(f"Você está logado como {username}!\nCaso queria enviar uma mensagem sem passar pelos protocolos de rede, deixe o segundo terminal vazio.\n", "utf8"))
     commands_help(client)
 
     while True:
@@ -50,63 +36,39 @@ def lidar_cliente(client):
                     commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos 
                     
                     if commands:
-                        cmd_mod_dig, cmd_mod_port, cmd_enquad, cmd_det = commands.split(" ")
+                        cmd_mod_digital, cmd_mod_portadora, cmd_enquadramento, cmd_deteccao_err = commands.split(" ")
 
                         bits = transformar_para_bits(message)
-                        client.send(bytes(f'\nBits: {bits}\n',"utf8"))
+                        client.send(bytes(f'Bits -> {transformar_para_bits(message)}',"utf8"))
 
                         # Enquadramento - Transmissor
-                        if cmd_enquad[-1] == "1": #Contagem de caracteres
-                            msg_enquadrada = transmissor_contagem_caractere_bytes(bits)
-                        elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
-                            msg_enquadrada = transmissor_insercao_bytes(bits)
-                        client.send(bytes(f'Enquadramento: {msg_enquadrada}\n',"utf8"))
+                        msg_enquadrada = enquadramento_transmissor(bits, cmd_enquadramento)
+                        client.send(bytes(f'Enquadramento -> {msg_enquadrada}',"utf8"))
 
                         # Detecção de erros - Transmissor
-                        if cmd_det[-1] == "1": #Bit de paridade par
-                            det_err_trans = transmissor_bit_paridade_par(msg_enquadrada)
-                        elif cmd_det[-1] == "2": #CRC
-                            det_err_trans = transmissor_crc(msg_enquadrada)
-                        client.send(bytes(f'Detecção de erros: {det_err_trans}\n',"utf8"))
+                        msg_pos_deteccao_err_trans = deteccao_err_transmissor(msg_enquadrada, cmd_deteccao_err)
+                        client.send(bytes(f'Detecção de erros -> {msg_pos_deteccao_err_trans}',"utf8"))
 
                         # Hamming - Transmissor
-                        corr_err_trans = transmissor_hamming_par(det_err_trans)
-                        client.send(bytes(f'Hamming: {corr_err_trans}\n',"utf8"))
+                        msg_pos_correcao_err_trans = hamming.transmissor_hp(msg_pos_deteccao_err_trans)
+                        client.send(bytes(f'Hamming -> {msg_pos_correcao_err_trans}\n',"utf8"))
 
                         # Modulação digital
-                        if cmd_mod_dig[-1] == "1": #NRZ Polar
-                            transmissor_nrz_polar(corr_err_trans)
-                        elif cmd_mod_dig == "2": #Manchester
-                            transmissor_manchester(corr_err_trans)
-                        elif cmd_mod_dig[-1] == "3": #Bipolar
-                            transmissor_bipolar(corr_err_trans)
+                        modulacao_digital(msg_pos_correcao_err_trans, cmd_mod_digital)
 
                         # Modulação por portadora
-                        if cmd_mod_port[-1] == "1": #ASK
-                            transmissor_ask(corr_err_trans)
-                        elif cmd_mod_port[-1] == "2": #FSK
-                            transmissor_fsk(corr_err_trans)
-                        elif cmd_mod_port[-1] == "3": #8-QAM
-                            transmissor_8QAM(corr_err_trans)
+                        modulacao_portadora(msg_pos_correcao_err_trans, cmd_mod_portadora)
 
                         # Hamming - Receptor
-                        corr_err_rec = receptor_hamming_par(corr_err_trans)
+                        msg_pos_correcao_err_rec = hamming.receptor_hp(msg_pos_correcao_err_trans)
 
                         # Detecção de erros - Receptor
-                        if cmd_det[-1] == "1": #Bit de paridade par
-                            eh_valido, det_err_rec = receptor_bit_paridade_par(corr_err_rec)
-                            if not eh_valido:
-                                break
-                        elif cmd_det[-1] == "2": #CRC
-                            eh_valido, det_err_rec = receptor_crc(corr_err_rec)
-                            if not eh_valido:
-                                break 
+                        eh_valido, msg_pos_deteccao_err_rec = deteccao_err_receptor(msg_pos_correcao_err_rec, cmd_deteccao_err)
+                        if not eh_valido:
+                            break
 
                         # Enquadramento - Receptor
-                        if cmd_enquad[-1] == "1": #Contagem de caracteres
-                            msg_desenquadrada = receptor_contagem_caractere_bytes(det_err_rec)
-                        elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
-                            msg_desenquadrada = receptor_insercao_bytes(det_err_rec)
+                        msg_desenquadrada = enquadramento_receptor(msg_pos_deteccao_err_rec, cmd_enquadramento)
 
                         send_message = f"{sender}: {transformar_para_ascii(msg_desenquadrada)}"
                         enviar_msg(bytes(send_message, "utf8"))

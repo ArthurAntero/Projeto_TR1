@@ -1,12 +1,12 @@
-def transmissor_bit_paridade_par(bits):
+def transmissor_bpp(bits):
     """
     Função do transmissor para realizar a detecção de erros de um 
     array de bytes utilizando bit de paridade PAR
 
     Parametros:
-        - bits: string de bits
+    - bits: string de bits
     Retorno:
-        - string com os bits de dados e o bit de paridade no final
+    - string com os bits de dados e o bit de paridade no final
     """
     # Contando o número de bits '1' no byte
     num_bits_1 = bits.count('1')
@@ -17,15 +17,17 @@ def transmissor_bit_paridade_par(bits):
 
     return resultado
 
-def receptor_bit_paridade_par(bits):
+def receptor_bpp(bits):
     """
     Função do receptor para realizar a detecção de erros de um 
     array de bytes utilizando bit de paridade PAR
 
     Parâmetros:
-        - bits: string de bits de dados e bit de paridade no final
+    - bits: string de bits de dados e bit de paridade no final
     Retorno:
-        - booleano (True se os bits sao validos e False se os bits nao sao validos)
+    - uma tupla no formato (booleano, string)
+      - booleano (True se os bits sao validos e False se os bits nao sao validos)
+      - string de bits representando os dados sem os bits de validacao
     """
     # Contando o número de bits '1' no byte original
     num_bits_1 = bits[:-1].count('1')

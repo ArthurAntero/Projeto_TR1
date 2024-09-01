@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def transmissor_manchester(entrada):
+def transmissor_m(entrada):
     """
     Função para gerar o sinal Manchester a partir de uma sequência de bits.
     
@@ -41,7 +41,7 @@ def transmissor_manchester(entrada):
     plt.grid(True)
     plt.show()
 
-def receptor_manchester(sinal_recebido):
+def receptor_m(sinal_recebido):
     """
     Função para demodular um sinal Manchester em uma sequência de bits.
     

@@ -1,14 +1,14 @@
 flag = "00100110" # &
 esc = "00011011" # ESC
 
-def transmissor_insercao_bytes(entrada, tamanho_quadro=6):
+def transmissor_ib(entrada, tamanho_quadro=6):
     """
     Função para realizar o enquadramento de uma string de bits, utilizando insercao de bytes.
     
     Parametros:
-        - entrada: string de bits.
+    - entrada: string de bits.
     Saida:
-        - uma string de bits com a insercao de bytes de flag e esc
+    - uma string de bits com a insercao de bytes de flag e esc
     """
     # se a entrada não couber em bytes, retorna -1
     if len(entrada) % 8 != 0:
@@ -35,14 +35,14 @@ def transmissor_insercao_bytes(entrada, tamanho_quadro=6):
 
     return quadros
 
-def receptor_insercao_bytes(bits):
+def receptor_ib(bits):
     """
     Função para realizar o desenquadramento de uma string de bits, utilizando insercao de bytes
 
     Parametros:
-        - bits: string de bits com bytes de flag e esc
+    - bits: string de bits com bytes de flag e esc
     Saida:
-        - string de bits sem os bytes de flag e esc
+    - string de bits sem os bytes de flag e esc
     """
     # se a entrada não couber em bytes, retorna -1
     if len(bits) % 8 != 0:

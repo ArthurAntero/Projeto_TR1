@@ -1,0 +1,1 @@
+from . import insercao_bytes, contagem_bytes

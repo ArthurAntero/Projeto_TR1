@@ -1,0 +1,1 @@
+from . import crc, bit_paridade_par

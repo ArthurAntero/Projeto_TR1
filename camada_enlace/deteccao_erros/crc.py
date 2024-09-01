@@ -4,10 +4,10 @@ def transmissor_crc(bits, polinomio_gerador="1000111"):
     no lado do transmissor
 
     Parametros:
-      - bits: string de bits sem o CRC
-      - polinomia_gerador: string de bits representativos do polinomio gerador
+    - bits: string de bits sem o CRC
+    - polinomia_gerador: string de bits representativos do polinomio gerador
     Retorno:
-      - string de bits com o CRC
+    - string de bits com o CRC
   """
   tamanho_gerador = len(polinomio_gerador)
   dividendo = bits + "0" * tamanho_gerador
@@ -27,10 +27,12 @@ def receptor_crc(bits, polinomio_gerador="1000111"):
     no lado do receptor
 
     Parametros:
-      - bits: string de bits com o CRC
-      - polinomia_gerador: string de bits representativos do polinomio gerador
+    - bits: string de bits com o CRC
+    - polinomia_gerador: string de bits representativos do polinomio gerador
     Retorno:
-      - um booleano (True se teve erro e False se não teve erro)
+    - uma tupla no formato (booleano, string)
+      - booleano (True se os bits sao validos e False se os bits nao sao validos)
+      - string de bits representando os dados sem os bits de validacao
   """
   tamanho_gerador = len(polinomio_gerador)
   dividendo = bits + "0" * tamanho_gerador
