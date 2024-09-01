@@ -7,7 +7,7 @@ from gi.repository import Gtk, GLib
 class Host(Gtk.Window):
     def __init__(self):
         super().__init__(title="Host")
-        self.set_default_size(400, 500)
+        self.set_default_size(900, 900)
         self.set_position(Gtk.WindowPosition.CENTER)
 
         self.client_socket = None
@@ -20,13 +20,19 @@ class Host(Gtk.Window):
         self.chat_scroll.set_vexpand(True)
         self.chat_scroll.add(self.chatbox)
 
-        self.message_entry = Gtk.Entry()
-        self.message_entry.set_hexpand(True)
-        self.message_entry.connect("activate", self.enviar_msg)
+        # Primeiro terminal de entrada de mensagem
+        self.message_entry1 = Gtk.Entry()
+        self.message_entry1.set_hexpand(True)
 
+        # Segundo terminal de entrada de mensagem (opcional)
+        self.message_entry2 = Gtk.Entry()
+        self.message_entry2.set_hexpand(True)
+
+        # Botão de enviar
         self.send_button = Gtk.Button(label="Enviar")
         self.send_button.connect("clicked", self.enviar_msg)
 
+        # Layout da interface
         self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.box.set_margin_top(20)
         self.box.set_margin_bottom(20)
@@ -35,11 +41,19 @@ class Host(Gtk.Window):
 
         self.box.pack_start(self.chat_scroll, True, True, 0)
 
-        self.entry_box = Gtk.Box(spacing=5)
-        self.entry_box.pack_start(self.message_entry, True, True, 0)
-        self.entry_box.pack_start(self.send_button, False, False, 0)
+        # Adicionando o primeiro terminal à interface
+        self.entry_box1 = Gtk.Box(spacing=5)
+        self.entry_box1.pack_start(self.message_entry1, True, True, 0)
+        self.box.pack_start(self.entry_box1, False, False, 0)
 
-        self.box.pack_start(self.entry_box, False, False, 0)
+        # Adicionando o segundo terminal à interface
+        self.entry_box2 = Gtk.Box(spacing=5)
+        self.entry_box2.pack_start(self.message_entry2, True, True, 0)
+        self.box.pack_start(self.entry_box2, False, False, 0)
+
+        # Adicionando o botão de envio
+        self.box.pack_start(self.send_button, False, False, 0)
+
         self.add(self.box)
 
         self.connect("destroy", self.on_closing)
@@ -81,11 +95,19 @@ class Host(Gtk.Window):
             self.destroy()
 
     def enviar_msg(self, widget):
-        message = self.message_entry.get_text()
-        if message:
-            formatted_message = f"{self.username}: {message}"
+        message1 = self.message_entry1.get_text()
+        message2 = self.message_entry2.get_text()
+
+        # Construa a mensagem concatenando os campos de entrada
+        if message2:
+            formatted_message = f"{self.username} : {message1} : {message2}"
+        else:
+            formatted_message = f"{self.username} : {message1}"
+
+        if message1:
             self.client_socket.send(formatted_message.encode())
-            self.message_entry.set_text("")
+            self.message_entry1.set_text("")
+            self.message_entry2.set_text("")  # Limpa o segundo campo também
 
     def receber_msg(self):
         while True:
