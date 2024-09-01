@@ -79,7 +79,8 @@ def lidar_cliente(client):
             enviar_msg(bytes(f"{username} saiu do chat.", "utf8"))
             break
 
-def transformar_para_bit(msg):
+def transformar_para_bit(_msg):
+  msg = _msg.split(": ")[1]
   bits = ""
   for char in msg:
     bits += format(ord(char), "08b")
