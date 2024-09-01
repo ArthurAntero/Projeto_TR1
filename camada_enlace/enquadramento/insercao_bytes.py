@@ -1,17 +1,15 @@
-def Transmissor_insercao_bytes(entrada):
+def Transmissor_insercao_bytes(entrada, tamanho_quadro=6):
     """
-    Função para realizar o enquadramento de um array de bytes utilizando insercao de bytes.
+    Função para realizar o enquadramento de uma string de bits, utilizando insercao de bytes.
     
     Parâmetros:
-    - entrada: String de bytes.
+    - entrada: string de bits.
     """
-    tamanho_quadro=6 # 6 bytes por quadro
     flag = "00100110" # &
     esc = "00011011" # ESC
-    quadros = []
+    quadros = ""
     
     lista_bytes = [format(ord(char), '08b') for char in entrada]
-    print(lista_bytes)
 
     # Dividindo os bytes em quadros
     while len(lista_bytes) > 0:
@@ -27,9 +25,15 @@ def Transmissor_insercao_bytes(entrada):
 
         # Adicionando FLAG ao início e ao fim do quadro
         quadro_completo = flag + quadro_inserido + flag
-        quadros.append(quadro_completo)
+        quadros += quadro_completo
 
-    return quadros 
+    return quadros
+
+def Receptor_insercao_bytes(bits):
+    """
+    Função para realizar o desenquadramento de uma string de bits, utilizando insercao de bytes
+    """
+    return ""
 
 # Exemplo de uso
 entrada = "&a"  # Cada caractere é convertido em um byte
