@@ -68,8 +68,3 @@ def Receptor_insercao_bytes(bits):
 
     return conteudo
 
-# Exemplo de uso
-entrada = "0010011001100001"  # Cada caractere é convertido em um byte
-resultado = Transmissor_insercao_bytes(entrada)  # Define o tamanho do quadro em bytes
-print(resultado)
-print(Receptor_insercao_bytes(resultado))

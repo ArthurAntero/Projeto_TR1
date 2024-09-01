@@ -33,4 +33,4 @@ def Receptor_bit_paridade_par(bits):
     # Se o número de bits '1' é par, o bit de paridade é '0', senão é '1'
     bit_paridade = '0' if num_bits_1 % 2 == 0 else '1'
 
-    return bits[-1] == bit_paridade
+    return (bits[-1] == bit_paridade, bits[:-1])
