@@ -1,4 +1,4 @@
-def Transmissor_bit_paridade_par(bits):
+def transmissor_bit_paridade_par(bits):
     """
     Função do transmissor para realizar a detecção de erros de um 
     array de bytes utilizando bit de paridade PAR
@@ -17,7 +17,7 @@ def Transmissor_bit_paridade_par(bits):
 
     return resultado
 
-def Receptor_bit_paridade_par(bits):
+def receptor_bit_paridade_par(bits):
     """
     Função do receptor para realizar a detecção de erros de um 
     array de bytes utilizando bit de paridade PAR

@@ -1,4 +1,4 @@
-def Transmissor_crc(bits, polinomio_gerador="1000111"):
+def transmissor_crc(bits, polinomio_gerador="1000111"):
   """
     Função de deteccao de erros na camada de enlace (subcamada LLC),
     no lado do transmissor
@@ -21,7 +21,7 @@ def Transmissor_crc(bits, polinomio_gerador="1000111"):
 
   return bits + resto
 
-def Receptor_crc(bits, polinomio_gerador="1000111"):
+def receptor_crc(bits, polinomio_gerador="1000111"):
   """
     Função de deteccao de erros na camada de enlace (subcamada LLC),
     no lado do receptor

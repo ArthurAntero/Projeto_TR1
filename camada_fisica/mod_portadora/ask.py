@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Transmissor_ask(entrada):
+def transmissor_ask(entrada):
     """
     Função para gerar o sinal ASK (Amplitude Shift Keying) a partir de uma sequência de bits.
     
@@ -34,7 +34,7 @@ def Transmissor_ask(entrada):
     plt.grid(True)
     plt.show()
 
-def Receptor_ask(sinal_recebido):
+def receptor_ask(sinal_recebido):
     """
     Função para demodular um sinal ASK em uma sequência de bits.
     

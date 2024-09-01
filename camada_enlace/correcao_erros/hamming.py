@@ -1,7 +1,7 @@
 # Definição das posições dos bits de verificação
 bits_hamming_posicoes = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
 
-def Transmissor_hamming_par(bits):
+def transmissor_hamming_par(bits):
   """
   Função que implementa o código de Hamming para a transmissão de uma mensagem.
 
@@ -31,7 +31,7 @@ def Transmissor_hamming_par(bits):
       j += 1
   return "".join(resultado)
 
-def Receptor_deteccao_hamming_par(bits):
+def receptor_deteccao_hamming_par(bits):
   """
   Função que implementa o código de Hamming para a recepção de uma mensagem.
 
@@ -59,7 +59,7 @@ def Receptor_deteccao_hamming_par(bits):
       hamming_bits += msg_bits[i]
   return ("1" not in hamming_bits, int(hamming_bits, 2) - 1)
 
-def Receptor_correcao_hamming(bits, result_deteccao_hamming):
+def receptor_correcao_hamming(bits, result_deteccao_hamming):
   """
   Função que corrige uma string de bits a partir do resultado de deteccao de erros utilizando Hamming
 
@@ -76,9 +76,9 @@ def Receptor_correcao_hamming(bits, result_deteccao_hamming):
     bits = bits[:bit_errado_index] + format(not int(bits[bit_errado_index], 2), "1b") + bits[bit_errado_index+1:]
   return bits
 
-def Receptor_hamming_par(bits):
-  result_deteccao_hamming = Receptor_deteccao_hamming_par(bits)
-  msg_corrigida = Receptor_correcao_hamming(bits, result_deteccao_hamming)
+def receptor_hamming_par(bits):
+  result_deteccao_hamming = receptor_deteccao_hamming_par(bits)
+  msg_corrigida = receptor_correcao_hamming(bits, result_deteccao_hamming)
 
   dados_sem_hamming = ""
   for i in range(0, len(msg_corrigida)):

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Transmissor_nrz_polar(entrada):
+def transmissor_nrz_polar(entrada):
     """
     Função para gerar o sinal NRZ Polar a partir de uma sequência de bits.
     
@@ -27,7 +27,7 @@ def Transmissor_nrz_polar(entrada):
     plt.grid(True)
     plt.show()  
 
-def Receptor_nrz_polar(sinal_recebido):
+def receptor_nrz_polar(sinal_recebido):
     """
     Função para demodular um sinal NRZ-Polar em uma sequência de bits.
     

@@ -22,6 +22,9 @@ from camada_fisica.mod_portadora.ask import *
 from camada_fisica.mod_portadora.fsk import *
 from camada_fisica.mod_portadora.qam import *
 
+# Funções auxiliares
+from aux import *
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 12345))
 server.listen(5)
@@ -46,67 +49,64 @@ def lidar_cliente(client):
                     message = decoded_msg[1]  # Mensagem
                     commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos 
                     
-                    if commands != "":
-                        cmd_mod_dig,cmd_mod_port,cmd_enquad, cmd_det = commands.split(" ")
+                    if commands:
+                        cmd_mod_dig, cmd_mod_port, cmd_enquad, cmd_det = commands.split(" ")
 
-                        client.send(bytes(f'Bits: {transformar_para_bit(message)}\n',"utf8"))
+                        bits = transformar_para_bits(message)
+                        client.send(bytes(f'Bits: {bits}\n',"utf8"))
 
                         # Enquadramento - Transmissor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
-                            msg_enquadrada = Transmissor_contagem_caractere_bytes(transformar_para_bit(message))
+                            msg_enquadrada = transmissor_contagem_caractere_bytes(bits)
                         elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
-                            msg_enquadrada = Transmissor_insercao_bytes(transformar_para_bit(message))
-
+                            msg_enquadrada = transmissor_insercao_bytes(bits)
                         client.send(bytes(f'Enquadramento: {msg_enquadrada}\n',"utf8"))
-                            
-                            
+
                         # Detecção de erros - Transmissor
                         if cmd_det[-1] == "1": #Bit de paridade par
-                            det_err_trans = Transmissor_bit_paridade_par(msg_enquadrada)
+                            det_err_trans = transmissor_bit_paridade_par(msg_enquadrada)
                         elif cmd_det[-1] == "2": #CRC
-                            det_err_trans = Transmissor_crc(msg_enquadrada)
-
+                            det_err_trans = transmissor_crc(msg_enquadrada)
                         client.send(bytes(f'Detecção de erros: {det_err_trans}\n',"utf8"))
 
                         # Hamming - Transmissor
-                        corr_err_trans = Transmissor_hamming_par(det_err_trans)
-
+                        corr_err_trans = transmissor_hamming_par(det_err_trans)
                         client.send(bytes(f'Hamming: {corr_err_trans}\n',"utf8"))
 
                         # Modulação digital
                         if cmd_mod_dig[-1] == "1": #NRZ Polar
-                            Transmissor_nrz_polar(corr_err_trans)
+                            transmissor_nrz_polar(corr_err_trans)
                         elif cmd_mod_dig == "2": #Manchester
-                            Transmissor_manchester(corr_err_trans)
+                            transmissor_manchester(corr_err_trans)
                         elif cmd_mod_dig[-1] == "3": #Bipolar
-                            Transmissor_bipolar(corr_err_trans)
+                            transmissor_bipolar(corr_err_trans)
 
                         # Modulação por portadora
                         if cmd_mod_port[-1] == "1": #ASK
-                            Transmissor_ask(corr_err_trans)
+                            transmissor_ask(corr_err_trans)
                         elif cmd_mod_port[-1] == "2": #FSK
-                            Transmissor_fsk(corr_err_trans)
+                            transmissor_fsk(corr_err_trans)
                         elif cmd_mod_port[-1] == "3": #8-QAM
-                            Transmissor_8QAM(corr_err_trans)
+                            transmissor_8QAM(corr_err_trans)
 
                         # Hamming - Receptor
-                        corr_err_rec = Receptor_hamming_par(corr_err_trans)
+                        corr_err_rec = receptor_hamming_par(corr_err_trans)
 
                         # Detecção de erros - Receptor
                         if cmd_det[-1] == "1": #Bit de paridade par
-                            (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
+                            eh_valido, det_err_rec = receptor_bit_paridade_par(corr_err_rec)
                             if not eh_valido:
                                 break
                         elif cmd_det[-1] == "2": #CRC
-                            (eh_valido, det_err_rec) = Receptor_crc(corr_err_rec)
+                            eh_valido, det_err_rec = receptor_crc(corr_err_rec)
                             if not eh_valido:
                                 break 
 
                         # Enquadramento - Receptor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
-                            msg_desenquadrada = Receptor_contagem_caractere_bytes(det_err_rec)
+                            msg_desenquadrada = receptor_contagem_caractere_bytes(det_err_rec)
                         elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
-                            msg_desenquadrada = Receptor_insercao_bytes(det_err_rec)
+                            msg_desenquadrada = receptor_insercao_bytes(det_err_rec)
 
                         send_message = f"{sender}: {transformar_para_ascii(msg_desenquadrada)}"
                         enviar_msg(bytes(send_message, "utf8"))
@@ -125,18 +125,6 @@ def lidar_cliente(client):
             del clients[client]
             enviar_msg(bytes(f"{username} saiu do chat.", "utf8"))
             break
-
-def transformar_para_bit(msg):
-  bits = ""
-  for char in msg:
-    bits += format(ord(char), "08b")
-  return bits
-
-def transformar_para_ascii(bits):
-    msg = ""
-    for byte_index in range(0, len(bits), 8):
-        msg += chr(int(bits[byte_index:byte_index + 8], 2))
-    return msg
 
 def commands_help(client):
     client.send(bytes("\nAjuda com comandos:\n", "utf-8"))

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Transmissor_fsk(entrada):
+def transmissor_fsk(entrada):
     """
     Função para gerar o sinal FSK (Frequency Shift Keying) a partir de uma sequência de bits.
     

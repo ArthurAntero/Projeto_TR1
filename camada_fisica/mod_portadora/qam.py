@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def Transmissor_8QAM(entrada):
+def transmissor_8QAM(entrada):
     """
     Função para gerar o sinal 8QAM a partir de uma sequência de bits.
     
