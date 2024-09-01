@@ -49,7 +49,7 @@ def lidar_cliente(client):
                     if commands != "":
                         cmd_mod_dig,cmd_mod_port,cmd_enquad, cmd_det = commands.split(" ")
 
-                        client.send(bytes(f'Bits: {transformar_para_bit(message)}',"utf8"))
+                        client.send(bytes(f'Bits: {transformar_para_bit(message)}\n',"utf8"))
 
                         # Enquadramento - Transmissor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
@@ -57,7 +57,7 @@ def lidar_cliente(client):
                         elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
                             msg_enquadrada = Transmissor_insercao_bytes(transformar_para_bit(message))
 
-                        client.send(bytes(f'Enquadramento: {msg_enquadrada}',"utf8"))
+                        client.send(bytes(f'Enquadramento: {msg_enquadrada}\n',"utf8"))
                             
                             
                         # Detecção de erros - Transmissor
@@ -66,12 +66,12 @@ def lidar_cliente(client):
                         elif cmd_det[-1] == "2": #CRC
                             det_err_trans = Transmissor_crc(msg_enquadrada)
 
-                        client.send(bytes(f'Detecção de erros: {det_err_trans}',"utf8"))
+                        client.send(bytes(f'Detecção de erros: {det_err_trans}\n',"utf8"))
 
                         # Hamming - Transmissor
                         corr_err_trans = Transmissor_hamming_par(det_err_trans)
 
-                        client.send(bytes(f'Hamming: {corr_err_trans}',"utf8"))
+                        client.send(bytes(f'Hamming: {corr_err_trans}\n',"utf8"))
 
                         # Modulação digital
                         if cmd_mod_dig[-1] == "1": #NRZ Polar
