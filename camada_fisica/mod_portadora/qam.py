@@ -39,7 +39,7 @@ def gerar_sinal_8qam(simbolos, taxa_de_amostragem=100, freq_portadora=5):
     # Eixo x -> Tempo
     x = np.arange(0, len(simbolos), 1/taxa_de_amostragem)
 
-    # Eixo y -> Sinal em frequência
+    # Eixo y -> Energia do sinal
     y = np.zeros_like(x)
     
     for i, (I, Q) in enumerate(simbolos):

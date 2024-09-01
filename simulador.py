@@ -44,19 +44,21 @@ def lidar_cliente(client):
                 if len(decoded_msg) >= 2:
                     sender = decoded_msg[0]  # Nome de usuário
                     message = decoded_msg[1]  # Mensagem
-                    commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos
-
-
-                    cmd_mod_dig,cmd_mod_port,cmd_enquad, cmd_det = commands.split(" ")
-                     
+                    commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos 
                     
                     if commands != "":
+                        cmd_mod_dig,cmd_mod_port,cmd_enquad, cmd_det = commands.split(" ")
+
+                        client.send(bytes(f'Bits: {transformar_para_bit(message)}',"utf8"))
 
                         # Enquadramento - Transmissor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
                             msg_enquadrada = Transmissor_contagem_caractere_bytes(transformar_para_bit(message))
                         elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
                             msg_enquadrada = Transmissor_insercao_bytes(transformar_para_bit(message))
+
+                        client.send(bytes(f'Enquadramento: {msg_enquadrada}',"utf8"))
+                            
                             
                         # Detecção de erros - Transmissor
                         if cmd_det[-1] == "1": #Bit de paridade par
@@ -64,8 +66,12 @@ def lidar_cliente(client):
                         elif cmd_det[-1] == "2": #CRC
                             det_err_trans = Transmissor_crc(msg_enquadrada)
 
+                        client.send(bytes(f'Detecção de erros: {det_err_trans}',"utf8"))
+
                         # Hamming - Transmissor
                         corr_err_trans = Transmissor_hamming_par(det_err_trans)
+
+                        client.send(bytes(f'Hamming: {corr_err_trans}',"utf8"))
 
                         # Modulação digital
                         if cmd_mod_dig[-1] == "1": #NRZ Polar
@@ -102,7 +108,7 @@ def lidar_cliente(client):
                         elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
                             msg_desenquadrada = Receptor_insercao_bytes(det_err_rec)
 
-                        send_message = f"{sender}: {msg_desenquadrada}"
+                        send_message = f"{sender}: {transformar_para_ascii(msg_desenquadrada)}"
                         enviar_msg(bytes(send_message, "utf8"))
                     else:
                         send_message = f"{sender}: {message}"
