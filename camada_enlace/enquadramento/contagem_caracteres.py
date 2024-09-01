@@ -4,6 +4,8 @@ def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
     
     Parâmetros:
     - entrada: string de bits.
+    Retorno:
+    - string de bits enquadrados.
     """
     # se a entrada não couber em bytes, retorna -1
     if len(entrada) % 8 != 0:
@@ -41,10 +43,12 @@ def Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6):
 
 def Receptor_contagem_caractere_bytes(bits):
     """
-    Função para realizar o desenquadramento de uma string de bits, utilizando contagem de bytes
+    Função para realizar o desenquadramento de uma string de bits, utilizando contagem de bytes.
 
     Parametros:
-        - bits: string de bits com os cabecalhos de enquadramento
+    - bits: string de bits com os cabecalhos de enquadramento.
+    Retorno:
+    - string de bits sem os cabecalhos do enquadramento OU -1 caso tenha erro no desenquadramento.
     """
     # se há uma contagem de bits que não cabem em bytes retorna -1
     if (len(bits)) % 8 != 0:
@@ -65,10 +69,3 @@ def Receptor_contagem_caractere_bytes(bits):
                 conteudo += bits[byte_index*8:(byte_index + 1)*8]
                 byte_index += 1
     return conteudo
-
-# Exemplo de uso
-entrada = "01000001011000010110000101100001011000010110000101100001"  # Bytes da string "Aaaaaaa"
-resultado = Transmissor_contagem_caractere_bytes(entrada, tamanho_quadro=6)  # Define o tamanho do quadro em bytes
-print(resultado)
-print(Receptor_contagem_caractere_bytes(resultado))  # Printa o conteudo de entrada sem os headers do enquadramento
-print(Receptor_contagem_caractere_bytes(resultado + "00100011"))  # Printa -1 (retorno de erro desenquadramento)
