@@ -33,7 +33,13 @@ def Transmissor_manchester(entrada):
     # Criação do eixo X
     x = np.linspace(0, num_bits, num_bits * amostras_por_bit)
     
-    return x, y
+    plt.figure(figsize=(10, 4))
+    plt.plot(x, y, drawstyle='steps-pre')
+    plt.title('Modulação Manchester')
+    plt.xlabel('Tempo')
+    plt.ylabel('Amplitude')
+    plt.grid(True)
+    plt.show()
 
 def Receptor_manchester(sinal_recebido):
     """
@@ -66,17 +72,3 @@ def Receptor_manchester(sinal_recebido):
     # Converter a lista de bits em uma string de bits
     return ''.join(bits_demodulados)
 
-# Exemplo de uso
-entrada = "100010000000010"
-x, y = Transmissor_manchester(entrada)
-bits_demodulados = Receptor_manchester(y)
-print("Bits demodulados:", bits_demodulados)
-
-# Plot do sinal Manchester
-plt.figure(figsize=(10, 4))
-plt.plot(x, y, drawstyle='steps-pre')
-plt.title('Modulação Manchester')
-plt.xlabel('Tempo')
-plt.ylabel('Amplitude')
-plt.grid(True)
-plt.show()
