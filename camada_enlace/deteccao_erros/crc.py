@@ -46,4 +46,4 @@ def Receptor_crc(quadro, polinomio_gerador="1000111"):
       resto = format(int(dividendo_temp, 2) ^ int("0"*tamanho_gerador, 2), f"0{tamanho_gerador - 1}b")
     dividendo_temp = resto + dividendo[i + tamanho_gerador]
 
-  return resto != "0" * (tamanho_gerador - 1)
+  return resto == "0" * (tamanho_gerador - 1)
