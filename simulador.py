@@ -1,6 +1,26 @@
 import socket
 import threading
 
+# Camada de Enlace - Detecção de erros
+from camada_enlace.deteccao_erros.crc import *
+
+# Camada de Enlace - Correção de erros
+from camada_enlace.correcao_erros.hamming import *
+
+# Camada de Enlace - Enquadramento
+from camada_enlace.enquadramento.contagem_caracteres import *
+from camada_enlace.enquadramento.insercao_bytes import *
+
+# Camada Física - Modulação Digital
+from camada_fisica.mod_digital.bipolar import *
+from camada_fisica.mod_digital.manchester import *
+from camada_fisica.mod_digital.nrz_polar import *
+
+# Camada Física - Modulação de Portadora
+from camada_fisica.mod_portadora.ask import *
+from camada_fisica.mod_portadora.fsk import *
+from camada_fisica.mod_portadora.qam import *
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('127.0.0.1', 12345))
 server.listen(5)
@@ -33,8 +53,7 @@ def lidar_cliente(client):
                             #bit_de_paridade_par()
                             print("Bit de paridade par")
                         elif commands.split(" ")[3][-1] == "2":
-                            #crc()
-                            print("CRC")
+                            print(Transmissor_crc(transformar_para_bit(message)))
 
                         # Hamming
                         print("Hamming")
