@@ -1,4 +1,4 @@
-def Transmissor_crc(quadro, polinomio_gerador):
+def Transmissor_crc(quadro, polinomio_gerador="1000111"):
   """
     Função de deteccao de erros na camada de enlace (subcamada LLC),
     no lado do transmissor
@@ -23,7 +23,7 @@ def Transmissor_crc(quadro, polinomio_gerador):
 
   return quadro + resto
 
-def Receptor_crc(quadro, polinomio_gerador):
+def Receptor_crc(quadro, polinomio_gerador="1000111"):
   """
     Função de deteccao de erros na camada de enlace (subcamada LLC),
     no lado do receptor
@@ -47,12 +47,3 @@ def Receptor_crc(quadro, polinomio_gerador):
     dividendo_temp = resto + dividendo[i + tamanho_gerador]
 
   return resto != "0" * (tamanho_gerador - 1)
-
-quadro_s_crc = "11111001100"
-polinomio_gerador = "100011001"
-quadro_c_crc_certo = "1111100110000000111"
-quadro_c_crc_errado = "1111100110000000110"
-
-print(Transmissor_crc(quadro_s_crc, polinomio_gerador))
-print(Receptor_crc(quadro_c_crc_certo, polinomio_gerador))  # sem erro
-print(Receptor_crc(quadro_c_crc_errado, polinomio_gerador))  # com erro
