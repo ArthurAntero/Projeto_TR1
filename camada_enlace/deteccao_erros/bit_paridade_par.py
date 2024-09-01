@@ -34,9 +34,3 @@ def Receptor_bit_paridade_par(quadro):
     bit_paridade = '0' if num_bits_1 % 2 == 0 else '1'
 
     return quadro[-1] == bit_paridade
-
-# Exemplo de uso
-quadro = "00100110001000000010011000100110"
-print(Transmissor_bit_paridade_par(quadro))
-print(Receptor_bit_paridade_par(quadro)) # Resposta sem erro (True)
-print(Receptor_bit_paridade_par("10100110001000000010011000100110")) # Resposta com erro (False)

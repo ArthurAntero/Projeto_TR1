@@ -2,6 +2,7 @@ import socket
 import threading
 
 # Camada de Enlace - Detecção de erros
+from camada_enlace.deteccao_erros.bit_paridade_par import *
 from camada_enlace.deteccao_erros.crc import *
 
 # Camada de Enlace - Correção de erros
@@ -49,41 +50,53 @@ def lidar_cliente(client):
                     enviar_msg(bytes(send_message, "utf8"))
 
                     if commands != "":
-                        if commands.split(" ")[3][-1] == "1":
-                            #bit_de_paridade_par()
-                            print("Bit de paridade par")
-                        elif commands.split(" ")[3][-1] == "2":
-                            print(Transmissor_crc(transformar_para_bit(message)))
 
-                        # Hamming
-                        print("Hamming")
+                        # Enquadramento - Transmissor
+                        if commands.split(" ")[2][-1] == "1": #Contagem de caracteres
+                            msg_enquadrada = Transmissor_contagem_caractere_bytes(transformar_para_bit(message))
+                        elif commands.split(" ")[2][-1] == "2": #Insercao de bytes ou caracteres
+                            msg_enquadrada = Transmissor_insercao_bytes(transformar_para_bit(message))
+                            
+                        # Detecção de erros - Transmissor
+                        if commands.split(" ")[3][-1] == "1": #Bit de paridade par
+                            det_err_trans = Transmissor_bit_paridade_par(msg_enquadrada)
+                        elif commands.split(" ")[3][-1] == "2": #CRC
+                            det_err_trans = Transmissor_crc(msg_enquadrada)
 
-                        if commands.split(" ")[2][-1] == "1":
-                            #Contagem de caracteres
-                            print("Contagem de caracteres")
-                        elif commands.split(" ")[2][-1] == "2":
-                            #Insercao de bytes ou caracteres
-                            print("Insercao de bytes ou caracteres")
+                        # Hamming - Transmissor
+                        corr_err_trans = Transmissor_hamming_par(det_err_trans)
 
-                        if commands.split(" ")[0][-1] == "1":
-                            #NRZ Polar
-                            print("NRZ Polar")
-                        elif commands.split(" ")[0] == "2":
-                            #Manchester
-                            print("Manchester")
-                        elif commands.split(" ")[0][-1] == "3":
-                            #Bipolar
-                            print("Bipolar")
+                        # Modulação digital
+                        if commands.split(" ")[0][-1] == "1": #NRZ Polar
+                            Transmissor_nrz_polar(corr_err_trans)
+                        elif commands.split(" ")[0] == "2": #Manchester
+                            Transmissor_manchester(corr_err_trans)
+                        elif commands.split(" ")[0][-1] == "3": #Bipolar
+                            Transmissor_bipolar(corr_err_trans)
 
-                        if commands.split(" ")[1][-1] == "1":
-                            #ASK
-                            print("ASK")
-                        elif commands.split(" ")[1][-1] == "2":
-                            #FSK
-                            print("FSK")
-                        elif commands.split(" ")[1][-1] == "3":
-                            #8-QAM
-                            print("8-QAM")
+                        # Modulação por portadora
+                        if commands.split(" ")[1][-1] == "1": #ASK
+                            Transmissor_ask(corr_err_trans)
+                        elif commands.split(" ")[1][-1] == "2": #FSK
+                            Transmissor_fsk(corr_err_trans)
+                        elif commands.split(" ")[1][-1] == "3": #8-QAM
+                            Transmissor_8QAM(corr_err_trans)
+
+                        # Hamming - Receptor
+                        corr_err_rec = Receptor_correcao_hamming(corr_err_trans)
+
+                        # Detecção de erros - Receptor
+                        if commands.split(" ")[3][-1] == "1": #Bit de paridade par
+                            det_err_rec = Receptor_bit_paridade_par(corr_err_rec)
+                        elif commands.split(" ")[3][-1] == "2": #CRC
+                            det_err_rec = Receptor_crc(corr_err_rec)
+
+                        # Enquadramento - Receptor
+                        if commands.split(" ")[2][-1] == "1": #Contagem de caracteres
+                            msg_desenquadrada = Receptor_contagem_caractere_bytes(transformar_para_bit(det_err_rec))
+                        elif commands.split(" ")[2][-1] == "2": #Insercao de bytes ou caracteres
+                            msg_desenquadrada = Receptor_insercao_bytes(transformar_para_bit(det_err_rec))
+
 
             else:
                 # Conexão fechada abruptamente
