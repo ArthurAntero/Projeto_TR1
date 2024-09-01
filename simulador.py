@@ -31,7 +31,7 @@ clients = {}  # Armazena os clientes e seus nomes de usuário
 def lidar_cliente(client):
     username = client.recv(1024).decode()  # Recebe o nome de usuário
     clients[client] = username  # Adiciona o cliente à lista de clientes conectados
-    client.send(bytes(f"Você está logado como {username}!\nDigite /help no primeiro terminal com o segundo vazio para ajuda com comandos.\n", "utf8"))
+    client.send(bytes(f"Você está logado como {username}!\n", "utf8"))
     commands_help(client)
 
     while True:
@@ -45,60 +45,62 @@ def lidar_cliente(client):
                     sender = decoded_msg[0]  # Nome de usuário
                     message = decoded_msg[1]  # Mensagem
                     commands = decoded_msg[2] if len(decoded_msg) > 2 else ""  # Comandos
-                    
 
+
+                    cmd_mod_dig,cmd_mod_port,cmd_enquad, cmd_det = commands.split(" ")
+                     
+                    
                     if commands != "":
 
                         # Enquadramento - Transmissor
-                        if commands.split(" ")[2][-1] == "1": #Contagem de caracteres
+                        if cmd_enquad[-1] == "1": #Contagem de caracteres
                             msg_enquadrada = Transmissor_contagem_caractere_bytes(transformar_para_bit(message))
-                        elif commands.split(" ")[2][-1] == "2": #Insercao de bytes ou caracteres
+                        elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
                             msg_enquadrada = Transmissor_insercao_bytes(transformar_para_bit(message))
                             
                         # Detecção de erros - Transmissor
-                        if commands.split(" ")[3][-1] == "1": #Bit de paridade par
+                        if cmd_det[-1] == "1": #Bit de paridade par
                             det_err_trans = Transmissor_bit_paridade_par(msg_enquadrada)
-                        elif commands.split(" ")[3][-1] == "2": #CRC
+                        elif cmd_det[-1] == "2": #CRC
                             det_err_trans = Transmissor_crc(msg_enquadrada)
 
                         # Hamming - Transmissor
                         corr_err_trans = Transmissor_hamming_par(det_err_trans)
 
                         # Modulação digital
-                        if commands.split(" ")[0][-1] == "1": #NRZ Polar
+                        if cmd_mod_dig[-1] == "1": #NRZ Polar
                             Transmissor_nrz_polar(corr_err_trans)
-                        elif commands.split(" ")[0] == "2": #Manchester
+                        elif cmd_mod_dig == "2": #Manchester
                             Transmissor_manchester(corr_err_trans)
-                        elif commands.split(" ")[0][-1] == "3": #Bipolar
+                        elif cmd_mod_dig[-1] == "3": #Bipolar
                             Transmissor_bipolar(corr_err_trans)
 
                         # Modulação por portadora
-                        if commands.split(" ")[1][-1] == "1": #ASK
+                        if cmd_mod_port[-1] == "1": #ASK
                             Transmissor_ask(corr_err_trans)
-                        elif commands.split(" ")[1][-1] == "2": #FSK
+                        elif cmd_mod_port[-1] == "2": #FSK
                             Transmissor_fsk(corr_err_trans)
-                        elif commands.split(" ")[1][-1] == "3": #8-QAM
+                        elif cmd_mod_port[-1] == "3": #8-QAM
                             Transmissor_8QAM(corr_err_trans)
 
                         # Hamming - Receptor
                         corr_err_rec = Receptor_hamming_par(corr_err_trans)
 
                         # Detecção de erros - Receptor
-                        if commands.split(" ")[3][-1] == "1": #Bit de paridade par
+                        if cmd_det[-1] == "1": #Bit de paridade par
                             (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
-                            print(det_err_rec)
                             if not eh_valido:
                                 print("Erro")
-                        elif commands.split(" ")[3][-1] == "2": #CRC
-                            (eh_valido, det_err_rec) = Receptor_bit_paridade_par(corr_err_rec)
+                        elif cmd_det[-1] == "2": #CRC
+                            (eh_valido, det_err_rec) = Receptor_crc(corr_err_rec)
                             if not eh_valido:
                                 print("Erro")  
 
                         # Enquadramento - Receptor
-                        if commands.split(" ")[2][-1] == "1": #Contagem de caracteres
-                            msg_desenquadrada = Receptor_contagem_caractere_bytes(transformar_para_bit(det_err_rec))
-                        elif commands.split(" ")[2][-1] == "2": #Insercao de bytes ou caracteres
-                            msg_desenquadrada = Receptor_insercao_bytes(transformar_para_bit(det_err_rec))
+                        if cmd_enquad[-1] == "1": #Contagem de caracteres
+                            msg_desenquadrada = Receptor_contagem_caractere_bytes(det_err_rec)
+                        elif cmd_enquad[-1] == "2": #Insercao de bytes ou caracteres
+                            msg_desenquadrada = Receptor_insercao_bytes(det_err_rec)
 
                         send_message = f"{sender}: {msg_desenquadrada}"
                         enviar_msg(bytes(send_message, "utf8"))

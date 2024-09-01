@@ -1,1 +1,0 @@
-print(format(not int("0", 2), "1b"))
