@@ -1,7 +1,12 @@
 #!/bin/bash
 
-python3 simulador.py &
+# Terminal 1
+gnome-terminal --title="Servidor" -- bash -c "python3 simulador.py; exec bash"
 
-python3 interfaceGUI.py &
+sleep 1
 
-python3 interfaceGUI.py &
+# Terminal 2
+gnome-terminal --title="Usuário 1" -- bash -c "python3 interfaceGUI.py; exec bash"
+
+# Terminal 3
+gnome-terminal --title="Usuário 2" -- bash -c "python3 interfaceGUI.py; exec bash"
