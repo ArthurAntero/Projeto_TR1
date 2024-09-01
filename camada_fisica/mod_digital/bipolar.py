@@ -69,7 +69,3 @@ def Receptor_bipolar(sinal_recebido):
 
     # Converter a lista de bits em uma string de bits
     return ''.join(bits_demodulados)
-
-# Exemplo de uso
-entrada = "10110011111111110000001010100"
-Transmissor_bipolar(entrada)
