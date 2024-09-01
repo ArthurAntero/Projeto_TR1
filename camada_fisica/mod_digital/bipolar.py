@@ -36,7 +36,7 @@ def Transmissor_bipolar(entrada):
     
     plt.figure(figsize=(10, 4))
     plt.plot(x, y, drawstyle='steps-pre')
-    plt.title('Modulação Bipolar (AMI)')
+    plt.title('Modulação Bipolar')
     plt.xlabel('Tempo')
     plt.ylabel('Amplitude')
     plt.grid(True)
