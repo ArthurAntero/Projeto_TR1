@@ -53,7 +53,7 @@ def lidar_cliente(client):
                         cmd_mod_dig, cmd_mod_port, cmd_enquad, cmd_det = commands.split(" ")
 
                         bits = transformar_para_bits(message)
-                        client.send(bytes(f'Bits: {bits}\n',"utf8"))
+                        client.send(bytes(f'\nBits: {bits}\n',"utf8"))
 
                         # Enquadramento - Transmissor
                         if cmd_enquad[-1] == "1": #Contagem de caracteres
@@ -127,15 +127,15 @@ def lidar_cliente(client):
             break
 
 def commands_help(client):
-    client.send(bytes("\nAjuda com comandos:\n", "utf-8"))
-    client.send(bytes("O segundo terminal é apenas para comandos!\n\n", "utf-8"))
-    client.send(bytes("Para escolher modulação digital: md[1-3]\n1- NRZ-Polar\n2- Manchester\n3- Bipolar\n\n", "utf-8"))
-    client.send(bytes("Para escolher modulação de portadora: mp[1-3]\n1- ASK\n2- FSK\n3- 8-QAM\n\n", "utf-8"))
-    client.send(bytes("Para escolher enquadramento de dados: e[1-2]\n1- Contagem de caracteres\n2- Inserção de bytes ou caracteres\n\n", "utf-8"))
-    client.send(bytes("Para escolher detecção de erros: de[1-2]\n1- Bit de paridade par\n2- CRC\n\n", "utf-8"))
-    client.send(bytes("Exemplo de uso no terminal de comando:\nmd1 mp2 e1 de2\n\n", "utf-8"))
-    client.send(bytes("Siga a ordem mostrada!\n", "utf-8"))
-    client.send(bytes("Não se esqueça dos espaços entre escolhas!\n", "utf-8"))
+    client.send(bytes("\nAjuda com comandos:\n", "utf8"))
+    client.send(bytes("O segundo terminal é apenas para comandos!\n\n", "utf8"))
+    client.send(bytes("Para escolher modulação digital: md[1-3]\n1- NRZ-Polar\n2- Manchester\n3- Bipolar\n\n", "utf8"))
+    client.send(bytes("Para escolher modulação de portadora: mp[1-3]\n1- ASK\n2- FSK\n3- 8-QAM\n\n", "utf8"))
+    client.send(bytes("Para escolher enquadramento de dados: e[1-2]\n1- Contagem de caracteres\n2- Inserção de bytes ou caracteres\n\n", "utf8"))
+    client.send(bytes("Para escolher detecção de erros: de[1-2]\n1- Bit de paridade par\n2- CRC\n\n", "utf8"))
+    client.send(bytes("Exemplo de uso no terminal de comando:\nmd1 mp2 e1 de2\n\n", "utf8"))
+    client.send(bytes("Siga a ordem mostrada!\n", "utf8"))
+    client.send(bytes("Não se esqueça dos espaços entre escolhas!\n", "utf8"))
 
 def enviar_msg(msg):
     for client in clients:
