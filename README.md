@@ -8,4 +8,4 @@ Projeto proposto na disciplina de Teleinformática e Redes 1 do Departamento de 
 - Matplotlib v3.7+ - gráficos
 - Numpy v1.20+ - manipulação de número
 - PyGobject v3.40+
-- Gtk v4.0+ - interface gráfica
+- Gtk v3.0+ - interface gráfica
