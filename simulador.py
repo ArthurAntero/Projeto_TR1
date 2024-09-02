@@ -39,7 +39,7 @@ def lidar_cliente(client):
                         cmd_mod_digital, cmd_mod_portadora, cmd_enquadramento, cmd_deteccao_err = commands.split(" ")
 
                         bits = transformar_para_bits(message)
-                        client.send(bytes(f'Bits -> {transformar_para_bits(message)}',"utf8"))
+                        client.send(bytes(f'Bits -> {transformar_para_bits(message)}\n',"utf8"))
 
                         # Enquadramento - Transmissor
                         msg_enquadrada = enquadramento_transmissor(bits, cmd_enquadramento)
