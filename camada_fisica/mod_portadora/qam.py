@@ -52,10 +52,11 @@ def gerar_sinal_8qam(simbolos, taxa_de_amostragem=100, freq_portadora=5):
 
 def plotar_sinal_8qam(t, sinal):
     """Plota o sinal 8-QAM gerado no tempo."""
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(17, 14))
     plt.plot(t, sinal, color='blue')
     plt.title("Modulação 8-QAM")
     plt.xlabel("Tempo")
     plt.ylabel("Amplitude")
     plt.grid(True)
+    plt.tight_layout()
     plt.show()

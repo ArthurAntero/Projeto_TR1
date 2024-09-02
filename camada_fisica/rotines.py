@@ -15,7 +15,7 @@ def modulacao_digital(msg_pos_correcao_err_trans, cmd_mod_digital):
     """
     if cmd_mod_digital[-1] == "1": #NRZ Polar
         nrz_polar.transmissor_nrz_p(msg_pos_correcao_err_trans)
-    elif cmd_mod_digital == "2": #Manchester
+    elif cmd_mod_digital[-1] == "2": #Manchester
         manchester.transmissor_m(msg_pos_correcao_err_trans)
     elif cmd_mod_digital[-1] == "3": #Bipolar
         bipolar.transmissor_bi(msg_pos_correcao_err_trans)

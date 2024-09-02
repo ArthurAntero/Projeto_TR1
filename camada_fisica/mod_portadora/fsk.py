@@ -29,7 +29,7 @@ def transmissor_fsk(entrada):
             y[i * amostras_por_bit:(i + 1) * amostras_por_bit] = V * np.sin(2 * np.pi * freq_portadora * t[i * amostras_por_bit:(i + 1) * amostras_por_bit])
     
     
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(17,14))
     plt.plot(t, y)
     plt.title('Modulação FSK (Frequency Shift Keying)')
     plt.xlabel('Tempo')

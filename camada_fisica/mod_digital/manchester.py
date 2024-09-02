@@ -33,42 +33,10 @@ def transmissor_m(entrada):
     # Criação do eixo X
     x = np.linspace(0, num_bits, num_bits * amostras_por_bit)
     
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(17,14))
     plt.plot(x, y, drawstyle='steps-pre')
     plt.title('Modulação Manchester')
     plt.xlabel('Tempo')
     plt.ylabel('Amplitude')
     plt.grid(True)
-    plt.show()
-
-def receptor_m(sinal_recebido):
-    """
-    Função para demodular um sinal Manchester em uma sequência de bits.
-    
-    Parâmetros:
-    sinal_recebido: O sinal Manchester recebido como um array NumPy.
-    """
-    amostras_por_bit=100
-    num_amostras = len(sinal_recebido)
-    num_bits = num_amostras // amostras_por_bit
-    bits_demodulados = []
-
-    # Itera por cada bit no sinal recebido
-    for i in range(num_bits):
-        # Dividir o sinal pela metade
-        segmento_1 = sinal_recebido[i * amostras_por_bit : i * amostras_por_bit + amostras_por_bit // 2]
-        segmento_2 = sinal_recebido[i * amostras_por_bit + amostras_por_bit // 2 : (i + 1) * amostras_por_bit]
-
-        # Calcula o valor médio de cada segmento
-        media_1 = np.mean(segmento_1)
-        media_2 = np.mean(segmento_2)
-        
-        # Verifica a transição do meio do bit
-        if media_1 > media_2:
-            bits_demodulados.append('1')  # Transição de alto para baixo -> Bit '1'
-        else:
-            bits_demodulados.append('0')  # Transição de baixo para alto -> Bit '0'
-
-    # Converter a lista de bits em uma string de bits
-    return ''.join(bits_demodulados)
-
+    plt.show(block=True)
