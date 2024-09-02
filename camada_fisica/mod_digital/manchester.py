@@ -39,6 +39,8 @@ def transmissor_m(entrada):
     plt.xlabel('Tempo')
     plt.ylabel('Amplitude')
     plt.grid(True)
+    plt.xticks(rotation=45)  # Rotaciona os rótulos do eixo X para melhor visibilidade
+    plt.tight_layout()  # Ajusta o layout para evitar sobreposição de elementos
     plt.show()
 
 def receptor_m(sinal_recebido):
